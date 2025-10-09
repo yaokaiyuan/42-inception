@@ -1,0 +1,68 @@
+version: "3.8"
+
+services:
+  mariadb:
+    build: ./requirements/mariadb
+    container_name: mariadb
+    restart: unless-stopped
+    networks:
+      - inception_network
+    volumes:
+      - ${HOST_DATA_DIR}/db:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD_FILE=${MYSQL_PASSWORD_FILE}
+      - MYSQL_ROOT_PASSWORD_FILE=${MYSQL_ROOT_PASSWORD_FILE}
+    secrets:
+      - db_root_password
+      - db_password
+
+  wordpress:
+    build: ./requirements/wordpress
+    container_name: wordpress
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+    networks:
+      - inception_network
+    volumes:
+      - ${HOST_DATA_DIR}/wp:/var/www/html
+    environment:
+      - WORDPRESS_DB_HOST=mariadb:3306
+      - WORDPRESS_DB_NAME=${MYSQL_DATABASE}
+      - WORDPRESS_DB_USER=${MYSQL_USER}
+      - WORDPRESS_DB_PASSWORD_FILE=${MYSQL_PASSWORD_FILE}
+      - WP_ADMIN_USER=${WP_ADMIN_USER}
+      - WP_ADMIN_PASSWORD_FILE=${WP_ADMIN_PASSWORD_FILE}
+      - WP_ADMIN_EMAIL=${WP_ADMIN_EMAIL}
+    secrets:
+      - db_password
+      - wp_admin_password
+
+  nginx:
+    build: ./requirements/nginx
+    container_name: nginx
+    restart: unless-stopped
+    depends_on:
+      - wordpress
+    networks:
+      - inception_network
+    ports:
+      - "443:443"
+    volumes:
+      - ${HOST_DATA_DIR}/wp:/var/www/html:ro
+      - ./requirements/nginx/conf:/etc/nginx/conf.d:ro
+      - ./requirements/nginx/conf/ssl:/etc/nginx/ssl:ro
+
+secrets:
+  db_root_password:
+    file: ../secrets/db_root_password.txt
+  db_password:
+    file: ../secrets/db_password.txt
+  wp_admin_password:
+    file: ../secrets/wp_admin_password.txt
+
+networks:
+  inception_network:
+    driver: bridge
