@@ -151,25 +151,25 @@ check_requirement $((1 - WORDPRESS_VOLUME)) "WordPress volume exists"
 MARIADB_VOLUME_NAME=$(docker volume ls --format "{{.Name}}" | grep mariadb | head -1)
 if [ -n "$MARIADB_VOLUME_NAME" ]; then
     MARIADB_DEVICE=$(docker volume inspect $MARIADB_VOLUME_NAME --format "{{.Options.device}}" 2>/dev/null)
-    if [ "$MARIADB_DEVICE" = "/home/aomont/data/mariadb" ]; then
-        check_requirement 0 "MariaDB volume bind to /home/aomont/data/mariadb"
+    if [ "$MARIADB_DEVICE" = "/home/ykai-yua/data/mariadb" ]; then
+        check_requirement 0 "MariaDB volume bind to /home/ykai-yua/data/mariadb"
     else
-        check_requirement 1 "MariaDB volume bind to /home/aomont/data/mariadb" "Found: $MARIADB_DEVICE"
+        check_requirement 1 "MariaDB volume bind to /home/ykai-yua/data/mariadb" "Found: $MARIADB_DEVICE"
     fi
 else
-    check_requirement 1 "MariaDB volume bind to /home/aomont/data/mariadb" "Volume not found"
+    check_requirement 1 "MariaDB volume bind to /home/ykai-yua/data/mariadb" "Volume not found"
 fi
 
 WORDPRESS_VOLUME_NAME=$(docker volume ls --format "{{.Name}}" | grep wordpress | head -1)
 if [ -n "$WORDPRESS_VOLUME_NAME" ]; then
     WORDPRESS_DEVICE=$(docker volume inspect $WORDPRESS_VOLUME_NAME --format "{{.Options.device}}" 2>/dev/null)
-    if [ "$WORDPRESS_DEVICE" = "/home/aomont/data/wordpress" ]; then
-        check_requirement 0 "WordPress volume bind to /home/aomont/data/wordpress"
+    if [ "$WORDPRESS_DEVICE" = "/home/ykai-yua/data/wordpress" ]; then
+        check_requirement 0 "WordPress volume bind to /home/ykai-yua/data/wordpress"
     else
-        check_requirement 1 "WordPress volume bind to /home/aomont/data/wordpress" "Found: $WORDPRESS_DEVICE"
+        check_requirement 1 "WordPress volume bind to /home/ykai-yua/data/wordpress" "Found: $WORDPRESS_DEVICE"
     fi
 else
-    check_requirement 1 "WordPress volume bind to /home/aomont/data/wordpress" "Volume not found"
+    check_requirement 1 "WordPress volume bind to /home/ykai-yua/data/wordpress" "Volume not found"
 fi
 
 echo ""
@@ -292,15 +292,15 @@ echo "=== 9. DOMAIN NAME ==="
 echo ""
 
 # Check domain in /etc/hosts
-DOMAIN_IN_HOSTS=$(grep -c "aomont.42.fr" /etc/hosts 2>/dev/null || echo 0)
-check_requirement $((1 - DOMAIN_IN_HOSTS)) "Domain aomont.42.fr in /etc/hosts"
+DOMAIN_IN_HOSTS=$(grep -c "ykai-yua.42.fr" /etc/hosts 2>/dev/null || echo 0)
+check_requirement $((1 - DOMAIN_IN_HOSTS)) "Domain ykai-yua.42.fr in /etc/hosts"
 
 # Check WordPress is accessible
-HTTP_RESPONSE=$(curl -k -s -o /dev/null -w "%{http_code}" https://aomont.42.fr 2>/dev/null || echo "000")
+HTTP_RESPONSE=$(curl -k -s -o /dev/null -w "%{http_code}" https://ykai-yua.42.fr 2>/dev/null || echo "000")
 if [ "$HTTP_RESPONSE" = "200" ] || [ "$HTTP_RESPONSE" = "301" ] || [ "$HTTP_RESPONSE" = "302" ]; then
-    check_requirement 0 "WordPress accessible via https://aomont.42.fr" "HTTP $HTTP_RESPONSE"
+    check_requirement 0 "WordPress accessible via https://ykai-yua.42.fr" "HTTP $HTTP_RESPONSE"
 else
-    check_requirement 1 "WordPress accessible via https://aomont.42.fr" "HTTP $HTTP_RESPONSE"
+    check_requirement 1 "WordPress accessible via https://ykai-yua.42.fr" "HTTP $HTTP_RESPONSE"
 fi
 
 echo ""
@@ -410,7 +410,7 @@ echo ""
 echo "=========================================="
 echo "📝 MANUAL VERIFICATION:"
 echo "=========================================="
-echo "1. Login to WordPress: https://aomont.42.fr/wp-admin"
+echo "1. Login to WordPress: https://ykai-yua.42.fr/wp-admin"
 echo "2. Test container restart: docker restart mariadb"
 echo "3. Test persistence: docker-compose down && docker-compose up -d"
 echo ""
