@@ -16,4 +16,4 @@ EXPOSE 3306
 VOLUME ["/var/lib/mysql"]
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-CMD ["mysqld", "--user=mysql", "--console"]
+CMD ["mysqld", "--user=mysql", "--console", "--bind-address=0.0.0.0"]
