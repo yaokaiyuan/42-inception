@@ -10,9 +10,9 @@
 
 | 項目 | 開發環境 (WSL2) | 學校 VM (Debian 12) |
 |------|----------------|-------------------|
-| 域名 | `ykaiyua.42.fr` | `ykai-yua.42.fr` (根據你的 login) |
+| 域名 | `ykai-yua.42.fr` | `ykai-yua.42.fr` (根據你的 login) |
 | `/etc/hosts` | 需手動添加 | 需手動添加 |
-| 資料目錄 | `/home/ykaiyua/data` | `/home/login/data` |
+| 資料目錄 | `/home/ykai-yua/data` | `/home/login/data` |
 | Docker | Docker Desktop (WSL2) | 原生 Docker Engine |
 | 網路 | WSL2 虛擬網路 | 原生 Linux 網路 |
 
@@ -22,7 +22,7 @@
 
 ```bash
 # 在學校 VM 上,確認你的 login
-whoami  # 假設輸出是 ykaiyua
+whoami  # 假設輸出是 ykai-yua
 
 # 更新 .env 檔案中的域名(如果需要)
 # 如果學校要求使用 ykai-yua.42.fr 格式
@@ -35,7 +35,7 @@ nano srcs/.env
 
 ```bash
 # 添加域名映射
-sudo sh -c 'echo "127.0.0.1 ykaiyua.42.fr" >> /etc/hosts'
+sudo sh -c 'echo "127.0.0.1 ykai-yua.42.fr" >> /etc/hosts'
 
 # 或者如果使用不同格式
 sudo sh -c 'echo "127.0.0.1 ykai-yua.42.fr" >> /etc/hosts'
@@ -48,8 +48,8 @@ grep "42.fr" /etc/hosts
 
 ```bash
 # 確保資料目錄存在
-sudo mkdir -p /home/ykaiyua/data/{mariadb,wordpress}
-sudo chown -R $USER:$USER /home/ykaiyua/data
+sudo mkdir -p /home/ykai-yua/data/{mariadb,wordpress}
+sudo chown -R $USER:$USER /home/ykai-yua/data
 
 # 構建並啟動
 make all
@@ -68,10 +68,10 @@ sleep 30
 docker ps
 
 # 檢查 WordPress 是否可訪問
-curl -k https://ykaiyua.42.fr
+curl -k https://ykai-yua.42.fr
 
 # 測試 WordPress 登入
-# 在瀏覽器打開: https://ykaiyua.42.fr/wp-admin
+# 在瀏覽器打開: https://ykai-yua.42.fr/wp-admin
 # 用戶名: ykai_admin
 # 密碼: (secrets/wp_admin_password.txt 中的內容)
 ```
@@ -81,7 +81,7 @@ curl -k https://ykaiyua.42.fr
 如果你想在當前環境達到 100%,只需添加 `/etc/hosts` 條目:
 
 ```bash
-sudo sh -c 'echo "127.0.0.1 ykaiyua.42.fr" >> /etc/hosts'
+sudo sh -c 'echo "127.0.0.1 ykai-yua.42.fr" >> /etc/hosts'
 ```
 
 然後重新運行評估:
@@ -107,7 +107,7 @@ sudo sh -c 'echo "127.0.0.1 ykaiyua.42.fr" >> /etc/hosts'
 3. **重新構建:**
    ```bash
    make clean
-   sudo rm -rf /home/ykaiyua/data/*
+   sudo rm -rf /home/ykai-yua/data/*
    make all
    ```
 
@@ -146,7 +146,7 @@ docker exec wordpress mysql -h mariadb -u wp_user -p$(cat secrets/db_password.tx
 docker logs --tail 100 <container_name>
 
 # 檢查資料目錄權限
-ls -la /home/ykaiyua/data/
+ls -la /home/ykai-yua/data/
 ```
 
 ### SSL 證書警告

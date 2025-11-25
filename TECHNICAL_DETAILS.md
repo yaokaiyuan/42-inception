@@ -69,13 +69,13 @@ WordPress 容器 --[wp_user:password123]--> MariaDB 容器
   ```
 
 **作用:**
-- 用於登入 WordPress 後台 (`https://ykaiyua.42.fr/wp-admin`)
+- 用於登入 WordPress 後台 (`https://ykai-yua.42.fr/wp-admin`)
 - 管理員用戶名: `ykai_admin` (來自 `.env`)
 - 擁有 WordPress 網站的完全控制權
 
 **登入資訊:**
 ```
-URL: https://ykaiyua.42.fr/wp-admin
+URL: https://ykai-yua.42.fr/wp-admin
 用戶名: ykai_admin
 密碼: adminpassword123
 ```
@@ -92,7 +92,7 @@ URL: https://ykaiyua.42.fr/wp-admin
   ```bash
   USER_PASS=$(cat /run/secrets/wp_user_password)
   # 創建第二個 WordPress 用戶
-  wp user create "ykai_editor" "editor@ykaiyua.42.fr" \
+  wp user create "ykai_editor" "editor@ykai-yua.42.fr" \
                  --user_pass="$USER_PASS" --role=author
   ```
 
@@ -103,7 +103,7 @@ URL: https://ykaiyua.42.fr/wp-admin
 
 **登入資訊:**
 ```
-URL: https://ykaiyua.42.fr/wp-admin
+URL: https://ykai-yua.42.fr/wp-admin
 用戶名: ykai_editor
 密碼: editor123
 ```
@@ -179,14 +179,14 @@ URL: https://ykaiyua.42.fr/wp-admin
 
 4. **安裝 WordPress** (背景執行)
    ```bash
-   wp core install --url="https://ykaiyua.42.fr" \
+   wp core install --url="https://ykai-yua.42.fr" \
                    --admin_user="ykai_admin" \
                    --admin_password="adminpassword123"
    ```
 
 5. **創建第二個用戶**
    ```bash
-   wp user create "ykai_editor" "editor@ykaiyua.42.fr" \
+   wp user create "ykai_editor" "editor@ykai-yua.42.fr" \
                   --user_pass="editor123"
    ```
 
@@ -267,7 +267,7 @@ ssl_certificate_key /etc/nginx/ssl/server.key;
 ### 🔄 SSL/TLS 工作流程
 
 ```
-1. 瀏覽器訪問 https://ykaiyua.42.fr
+1. 瀏覽器訪問 https://ykai-yua.42.fr
    ↓
 2. Nginx 發送 server.crt 給瀏覽器
    ↓
@@ -294,20 +294,20 @@ ssl_certificate_key /etc/nginx/ssl/server.key;
 openssl x509 -in server.crt -text -noout | grep "Subject:"
 ```
 
-你的證書 CN 是 `ykai-yua.42.fr`,但你的 `.env` 使用 `ykaiyua.42.fr`
+你的證書 CN 是 `ykai-yua.42.fr`,但你的 `.env` 使用 `ykai-yua.42.fr`
 
 ### 🔄 兩種情況:
 
 #### 情況 1: 域名相同 → 證書可以共用
 ```
-筆電: ykaiyua.42.fr
-學校 VM: ykaiyua.42.fr
+筆電: ykai-yua.42.fr
+學校 VM: ykai-yua.42.fr
 → 證書不需要改變 ✅
 ```
 
 #### 情況 2: 域名不同 → 需要重新生成證書
 ```
-筆電: ykaiyua.42.fr
+筆電: ykai-yua.42.fr
 學校 VM: ykai-yua.42.fr (不同格式)
 → 需要重新生成證書 ⚠️
 ```
@@ -315,15 +315,15 @@ openssl x509 -in server.crt -text -noout | grep "Subject:"
 ### 🛠️ 如何重新生成證書 (如果需要)
 
 ```bash
-cd /home/ykaiyua/42-inception/srcs/requirements/nginx/conf/ssl
+cd /home/ykai-yua/42-inception/srcs/requirements/nginx/conf/ssl
 
 # 生成新的私鑰和證書
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
   -keyout server.key \
   -out server.crt \
-  -subj "/C=FR/ST=Paris/L=Paris/O=42/OU=42/CN=ykaiyua.42.fr"
+  -subj "/C=FR/ST=Paris/L=Paris/O=42/OU=42/CN=ykai-yua.42.fr"
   
-# 注意: 把 CN=ykaiyua.42.fr 改成你實際使用的域名
+# 注意: 把 CN=ykai-yua.42.fr 改成你實際使用的域名
 ```
 
 ### 📊 環境對照表
