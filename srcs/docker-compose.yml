@@ -1,13 +1,13 @@
 services:
   mariadb:
     build: ./requirements/mariadb
-    image: inception_mariadb
+    image: inception_mariadb:1.0
     container_name: mariadb
     restart: unless-stopped
     networks:
       - inception_network
     volumes:
-      - ${HOST_DATA_DIR}/db:/var/lib/mysql
+      - mariadb_vol:/var/lib/mysql
     environment:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
@@ -19,7 +19,7 @@ services:
 
   wordpress:
     build: ./requirements/wordpress
-    image: inception_wordpress
+    image: inception_wordpress:1.0
     container_name: wordpress
     restart: unless-stopped
     depends_on:
@@ -27,7 +27,7 @@ services:
     networks:
       - inception_network
     volumes:
-      - ${HOST_DATA_DIR}/wp:/var/www/html
+      - wordpress_vol:/var/www/html
     environment:
       - WORDPRESS_DB_HOST=mariadb:3306
       - WORDPRESS_DB_NAME=${MYSQL_DATABASE}
@@ -47,7 +47,7 @@ services:
 
   nginx:
     build: ./requirements/nginx
-    image: inception_nginx
+    image: inception_nginx:1.0
     container_name: nginx
     restart: unless-stopped
     depends_on:
@@ -57,8 +57,9 @@ services:
     ports:
       - "443:443"
     volumes:
-      - ${HOST_DATA_DIR}/wp:/var/www/html:ro
-      - ./requirements/nginx/conf/ssl:/etc/nginx/ssl:ro
+      - wordpress_vol:/var/www/html:ro
+    environment:
+      - DOMAIN_NAME=${DOMAIN_NAME}
 
 secrets:
   db_root_password:
@@ -74,3 +75,17 @@ networks:
   inception_network:
     name: srcs_inception
     driver: bridge
+
+volumes:
+  mariadb_vol:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${HOST_DATA_DIR}/mariadb
+  wordpress_vol:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${HOST_DATA_DIR}/wordpress

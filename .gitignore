@@ -1,0 +1,19 @@
+# Secrets - NEVER commit these!
+secrets/
+srcs/.env
+
+# Data directories
+data/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.swp
+*.swo
+*~

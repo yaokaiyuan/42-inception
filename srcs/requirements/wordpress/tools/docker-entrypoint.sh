@@ -2,14 +2,17 @@
 
 WP_ROOT="/var/www/html"
 
-# If empty, download WordPress
-if [ -z "$(ls -A $WP_ROOT 2>/dev/null)" ]; then
+# Download WordPress if not already present (check for index.php)
+if [ ! -f "$WP_ROOT/index.php" ]; then
   echo "[wordpress] -> downloading wordpress..."
+  # Remove any existing files that might interfere
+  rm -rf $WP_ROOT/*
   wget -q https://wordpress.org/latest.tar.gz -O /tmp/wp.tar.gz
   tar -xzf /tmp/wp.tar.gz -C /tmp
   mv /tmp/wordpress/* $WP_ROOT
   rm -rf /tmp/wp.tar.gz /tmp/wordpress
   chown -R www-data:www-data $WP_ROOT
+  echo "[wordpress] -> WordPress downloaded successfully"
 fi
 
 # Read DB password from secret file if provided
